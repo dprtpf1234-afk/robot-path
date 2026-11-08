@@ -191,7 +191,7 @@ export function GameBoard(props: GameBoardProps) {
             data-tut={isTut(p.key) ? "target" : undefined}
             onClick={() => tapPalette(p.t, p.color)}
             disabled={locked}
-            className={`blk3d flex min-h-16 flex-col items-center justify-center gap-0.5 rounded-2xl px-2 py-1 text-white disabled:opacity-50 ${
+            className={`blk3d flex min-h-16 flex-col items-center justify-center gap-0.5 rounded-2xl px-2 py-1 text-[#3d3a5c] disabled:opacity-50 ${
               isTut(p.key) || idleTarget === p.key ? "glow" : ""
             }`}
             style={{ background: meta.bg, ["--blk-edge" as string]: meta.border }}
@@ -224,14 +224,14 @@ export function GameBoard(props: GameBoardProps) {
       </button>
       <button
         onClick={() => setSpeed((s) => (s === 1 ? 2 : 1))}
-        className={`h-14 min-w-14 rounded-xl px-3 text-base font-black ${speed === 2 ? "blk3d bg-amber-400" : "chip3d"}`}
+        className={`h-14 min-w-14 rounded-xl px-3 text-base font-black ${speed === 2 ? "blk3d bg-[#f8e2a4]" : "chip3d"}`}
         aria-label={`속도 ${speed}배`}
         aria-pressed={speed === 2}
       >
         {speed}×
       </button>
       {props.showHintButton && props.hint ? (
-        <button onClick={() => setShowHint(true)} className="blk3d h-14 rounded-xl bg-yellow-300 px-3 text-base font-bold" style={{ ["--blk-edge" as string]: "#ca8a04" }}>
+        <button onClick={() => setShowHint(true)} className="blk3d h-14 rounded-xl bg-[#f8e2a4] px-3 text-base font-bold" style={{ ["--blk-edge" as string]: "#dcbd6c" }}>
           💡 힌트
         </button>
       ) : null}
@@ -245,10 +245,10 @@ export function GameBoard(props: GameBoardProps) {
       disabled={locked || props.canRun === false}
       data-testid="run"
       data-tut={tutTarget?.kind === "run" ? "target" : undefined}
-      className={`blk3d flex h-16 shrink-0 min-w-28 items-center justify-center gap-2 rounded-2xl bg-green-500 px-5 text-2xl font-black text-white disabled:bg-slate-400 ${
+      className={`blk3d flex h-16 shrink-0 min-w-28 items-center justify-center gap-2 rounded-2xl bg-[#9fdcc3] px-5 text-2xl font-black text-[#3d3a5c] disabled:bg-slate-300 disabled:text-slate-500 ${
         tutTarget?.kind === "run" || idleTarget === "run" ? "glow" : ""
       }`}
-      style={{ ["--blk-edge" as string]: "#15803d" }}
+      style={{ ["--blk-edge" as string]: "#6fbb9c" }}
     >
       ▶ 실행
     </button>
@@ -274,7 +274,7 @@ export function GameBoard(props: GameBoardProps) {
     <div ref={boardRef} className="relative flex h-full min-h-0 flex-col">
       {props.header}
       {tutStep ? (
-        <div className="pop mx-auto my-1 rounded-full bg-amber-100 px-5 py-2 text-center text-xl font-black text-amber-900 shadow" data-testid="tutorial-text">
+        <div className="pop chip3d mx-auto my-1 rounded-full px-5 py-2 text-center text-xl font-black text-[#3d3a5c]" data-testid="tutorial-text">
           {tutStep.text}
         </div>
       ) : null}
@@ -317,7 +317,7 @@ export function GameBoard(props: GameBoardProps) {
             <p className="mb-3 text-base text-slate-600">처음은 이렇게 시작해 봐요</p>
             <StaticProgram program={props.hint.slice(0, 2)} />
             {countBlocks(props.hint) > countBlocks(props.hint.slice(0, 2)) ? <p className="mt-2 text-center text-2xl text-slate-400">…</p> : null}
-            <button className="mt-4 h-14 w-full rounded-2xl bg-indigo-600 text-xl font-bold text-white" onClick={() => setShowHint(false)}>
+            <button className="mt-4 h-14 w-full rounded-2xl bg-[#c9bdf0] text-xl font-bold text-[#3d3a5c]" onClick={() => setShowHint(false)}>
               알겠어요
             </button>
           </div>
@@ -353,8 +353,8 @@ function Finger({ rootRef, dep }: { rootRef: React.RefObject<HTMLDivElement | nu
       <svg className="finger" width="54" height="64" viewBox="0 0 54 64">
         <path
           d="M18 4 Q24 0 28 6 L28 26 L34 25 Q40 25 41 30 L46 31 Q52 33 51 40 L49 52 Q47 62 36 62 L24 62 Q16 62 12 54 L4 40 Q2 34 8 33 Q12 33 15 38 L18 42 Z"
-          fill="#fde68a"
-          stroke="#78350f"
+          fill="#fff6ea"
+          stroke="#3d3a5c"
           strokeWidth="3"
           strokeLinejoin="round"
         />

@@ -40,11 +40,11 @@ function List({
         const ring = same(failPath, path) ? "ring-4 ring-red-500" : same(activePath, path) ? "ring-4 ring-yellow-300" : "";
         const h = size === "sm" ? "min-h-9 text-sm" : "min-h-12 text-base";
         const head = (
-          <div className={`flex items-center gap-1 rounded-lg px-2 font-bold text-white ${h} ${ring}`} style={{ background: meta.bg }}>
+          <div className={`flex items-center gap-1 rounded-lg px-2 font-bold text-[#3d3a5c] ${h} ${ring}`} style={{ background: meta.bg }}>
             <BlockIcon t={b.t} color={b.t === "ifColor" ? b.color : undefined} size={size === "sm" ? 22 : 28} />
             <span>{meta.label}</span>
-            {b.t === "repeat" ? <span className="ml-1 rounded bg-white px-1.5 font-black text-orange-800">{b.n}</span> : null}
-            {b.t === "ifColor" ? <span className="ml-1 rounded bg-white/90 px-1 text-xs text-emerald-900">{b.color === "red" ? "빨강▲" : "파랑●"}</span> : null}
+            {b.t === "repeat" ? <span className="ml-1 rounded bg-white px-1.5 font-black text-[#3d3a5c]">{b.n}</span> : null}
+            {b.t === "ifColor" ? <span className="ml-1 rounded bg-white/90 px-1 text-xs text-[#3d3a5c]">{b.color === "red" ? "빨강▲" : "파랑●"}</span> : null}
           </div>
         );
         if (!("body" in b)) return <div key={i}>{head}</div>;

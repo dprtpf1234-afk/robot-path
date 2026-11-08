@@ -28,6 +28,7 @@ import { DEMO } from "@/lib/demo";
 import { enqueueStat, startAutoFlush } from "@/lib/sync";
 import { GameBoard } from "../game/GameBoard";
 import { MapView } from "../game/MapView";
+import { BlockIcon } from "../game/BlockIcon";
 import { fromProgram, useEditor } from "../game/editorStore";
 import { Stars } from "../ui/Stars";
 import { RegisterModal } from "./RegisterModal";
@@ -154,6 +155,8 @@ export function PlayApp() {
   );
 }
 
+const CHAPTER_TINT = { 1: "#a9cdf0", 2: "#f6c6a5", 3: "#a9dcc9" } as const;
+
 const DIORAMA = { 1: { layout: "t1", theme: "space" }, 2: { layout: "t2", theme: "ocean" }, 3: { layout: "t3", theme: "forest" } } as const;
 
 /** 챕터 카드 위의 작은 2.5D 미리보기 (그 장 튜토리얼 맵) */
@@ -193,8 +196,8 @@ function ChapterSelect({
             ← 홈
           </a>
         )}
-        <h1 className="flex-1 text-center text-2xl font-black text-indigo-950 sm:text-4xl">🤖 챕터를 골라요</h1>
-        <span className="rounded-xl bg-amber-100 px-3 py-2 text-lg font-black text-amber-800" aria-label={`모은 별 ${total}개`}>
+        <h1 className="flex-1 text-center text-2xl font-black tracking-tight sm:text-4xl">챕터를 골라요</h1>
+        <span className="chip3d rounded-xl px-3 py-2 text-lg font-black" aria-label={`모은 별 ${total}개`}>
           ★ {total}
         </span>
         {soundBtn}
@@ -207,8 +210,8 @@ function ChapterSelect({
             <section key={c.chapter} className="panel3d rounded-3xl p-4" data-testid={`chapter-${c.chapter}`}>
               <ChapterDiorama chapter={c.chapter} />
               <div className="mb-3 flex items-center gap-3">
-                <span className="text-4xl" aria-hidden>
-                  {c.icon}
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl" style={{ background: CHAPTER_TINT[c.chapter] }} aria-hidden>
+                  <BlockIcon t={c.chapter === 1 ? "forward" : c.chapter === 2 ? "repeat" : "ifWall"} size={30} />
                 </span>
                 <div>
                   <h2 className="text-2xl font-black">
@@ -230,12 +233,19 @@ function ChapterSelect({
                       disabled={!open}
                       data-testid={`stage-${s.id}`}
                       className={`flex aspect-square min-h-14 flex-col items-center justify-center rounded-2xl text-xl font-black ${
-                        open ? (best ? "blk3d bg-indigo-600 text-white" : "blk3d bg-indigo-100 text-indigo-900") : "bg-slate-200 text-slate-400"
+                        open ? (best ? "blk3d bg-[#c9bdf0] text-[#3d3a5c]" : "blk3d bg-white text-[#3d3a5c]") : "bg-white/40 text-slate-400"
                       }`}
-                      style={{ ["--blk-edge" as string]: best ? "#3730a3" : "#a5b4fc" }}
+                      style={{ ["--blk-edge" as string]: best ? "#a28fd6" : "#ddd5f5" }}
                       aria-label={`${s.id} 단계${open ? "" : " (잠김)"}${best ? `, 별 ${best.stars}개` : ""}`}
                     >
-                      {open ? s.stage : "🔒"}
+                      {open ? (
+                        s.stage
+                      ) : (
+                        <svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden>
+                          <rect x="3" y="10" width="14" height="10" rx="3" />
+                          <path d="M6.5 10 V7 a3.5 3.5 0 0 1 7 0 V10" />
+                        </svg>
+                      )}
                       <span className="text-xs leading-none">{best ? "★".repeat(best.stars) : " "}</span>
                     </button>
                   );
@@ -249,7 +259,7 @@ function ChapterSelect({
         {DEMO ? (
           <p className="text-center text-base text-slate-500">체험판: 기록은 이 브라우저에만 저장돼요. 랭킹·대회는 정식 사이트에서 열려요.</p>
         ) : (
-        <button onClick={onRegister} className="h-14 rounded-2xl bg-amber-400 px-6 text-xl font-black text-amber-950 shadow">
+        <button onClick={onRegister} className="blk3d h-14 rounded-2xl bg-[#f8e2a4] px-6 text-xl font-black" style={{ ["--blk-edge" as string]: "#dcbd6c" }}>
           🏆 랭킹에 등록하기
         </button>
         )}
@@ -378,7 +388,7 @@ function StageScreen({
         <span className="chip3d rounded-lg px-2 py-0.5 text-base font-bold" data-testid="target">
           {layout.targetVerified ? "최적" : "목표"} {layout.target}블록
         </span>
-        {best ? <span className="text-base text-amber-600">{"★".repeat(best.stars)}</span> : null}
+        {best ? <span className="text-base text-[#c4895a]">{"★".repeat(best.stars)}</span> : null}
       </div>
       {!stage.fixedLayout ? (
         <button
@@ -439,7 +449,7 @@ function StageScreen({
 
 function Confetti() {
   const pieces = Array.from({ length: 24 }, (_, i) => i);
-  const colors = ["#f43f5e", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7"];
+  const colors = ["#f4b9cb", "#f8e2a4", "#a9dcc9", "#a9cdf0", "#cbbcf0"];
   return (
     <div className="pointer-events-none fixed inset-0 z-40 overflow-hidden" aria-hidden>
       {pieces.map((i) => (
@@ -470,7 +480,7 @@ function ResultModal({
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="result-title">
       <Confetti />
       <div className="pop relative z-50 w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl">
-        <h2 id="result-title" className="text-3xl font-black text-indigo-700">
+        <h2 id="result-title" className="text-3xl font-black tracking-tight">
           도착 성공!
         </h2>
         <div className="my-3 flex justify-center">
@@ -480,10 +490,10 @@ function ResultModal({
           블록 <b className="text-2xl">{clear.blocks}</b>개 / 목표 <b className="text-2xl">{clear.target}</b>개
         </p>
         {clear.stars < 3 ? <p className="mt-1 text-base text-slate-600">블록을 {clear.blocks - clear.target}개 줄이면 ★3개!</p> : null}
-        {clear.genius ? <p className="mt-2 rounded-xl bg-fuchsia-100 p-2 text-lg font-black text-fuchsia-800">🧠 천재 프로그래머!</p> : null}
-        {clear.concept ? <p className="mt-2 rounded-xl bg-emerald-100 p-2 text-lg font-black text-emerald-800">🎖️ 조건 블록으로 성공!</p> : null}
+        {clear.genius ? <p className="mt-2 rounded-xl bg-[#f6e3f0] p-2 text-lg font-black">천재 프로그래머!</p> : null}
+        {clear.concept ? <p className="mt-2 rounded-xl bg-[#e1f3ee] p-2 text-lg font-black">조건 블록으로 성공!</p> : null}
         <div className="mt-5 grid gap-2">
-          <button onClick={onNext} className="h-16 rounded-2xl bg-indigo-600 text-2xl font-black text-white shadow" data-testid="next-stage">
+          <button onClick={onNext} className="blk3d h-16 rounded-2xl bg-[#9fdcc3] text-2xl font-black" style={{ ["--blk-edge" as string]: "#6fbb9c" }} data-testid="next-stage">
             {last ? "챕터 완료 →" : "다음 단계 →"}
           </button>
           <div className="grid grid-cols-2 gap-2">
@@ -522,23 +532,21 @@ function ChapterDone({
     <div className="flex h-full items-center justify-center p-4">
       <Confetti />
       <div className="pop w-full max-w-lg rounded-3xl bg-white p-6 text-center shadow-xl" data-testid="chapter-done">
-        <p className="text-5xl" aria-hidden>
-          🎉
-        </p>
-        <h1 className="mt-2 text-3xl font-black">
+        <ChapterDiorama chapter={chapter as 1 | 2 | 3} />
+        <h1 className="mt-2 text-3xl font-black tracking-tight">
           {chapter}장 「{c.title}」 완료!
         </h1>
         <p className="mt-3 text-2xl">
-          모은 별 <b className="text-amber-500">★ {stars}</b> / 15
+          모은 별 <b className="text-[#c4895a]">★ {stars}</b> / 15
         </p>
         <div className="mt-6 grid gap-2">
           {DEMO ? null : (
-            <button onClick={onRegister} className="h-16 rounded-2xl bg-amber-400 text-2xl font-black text-amber-950 shadow">
+            <button onClick={onRegister} className="blk3d h-16 rounded-2xl bg-[#f8e2a4] text-2xl font-black" style={{ ["--blk-edge" as string]: "#dcbd6c" }}>
               🏆 랭킹에 등록하기
             </button>
           )}
           {chapter < 3 ? (
-            <button onClick={onNextChapter} className="h-16 rounded-2xl bg-indigo-600 text-2xl font-black text-white shadow">
+            <button onClick={onNextChapter} className="blk3d h-16 rounded-2xl bg-[#9fdcc3] text-2xl font-black" style={{ ["--blk-edge" as string]: "#6fbb9c" }}>
               다음 챕터 →
             </button>
           ) : null}

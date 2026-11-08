@@ -1,9 +1,11 @@
 /* 테마 6종: 겉모습만 바꾸는 스킨. 모든 그래픽은 직접 그린 SVG.
- * 각 컴포넌트는 한 칸을 0~100 좌표로 그린다. 로봇은 북쪽(위)을 바라보는 모습으로 그리고, 화면에서 회전시킨다. */
+ * 스타일: 파스텔 미니멀. 테두리 없이 기하학 도형으로 그리고, 빛은 왼쪽 위에서 들어와
+ * 오른쪽 면이 한 톤 어둡다(두 톤 음영). 물체는 0~100 상자에 그리고 바닥이 y≈90이다. */
 import type { ReactElement } from "react";
 
 export interface RobotLook {
   body: string;
+  shade: string; // 몸의 그늘 면
   trim: string;
   visor: string;
   eye: string;
@@ -16,21 +18,30 @@ export interface Theme {
   robotName: string;
   goalName: string;
   obstacleName: string;
+  /** 하늘 아래쪽 / 위쪽 */
   bg: string;
+  bg2: string;
+  /** 바닥 윗면 두 톤(체크) */
   floor: string;
   floorAlt: string;
+  /** 칸 사이 이음선 */
   grid: string;
-  ui: string; // 테마 강조색 (버튼 등)
-  /** 2.5D 배경 밝은 쪽 / 보드 옆면 */
-  bg2: string;
+  /** 보드 앞면(두께) */
   side: string;
-  /** 2.5D 로봇 색과 머리 장식 (components/game/Robot25.tsx가 그림) */
+  /** 보드 아래 기둥·앞면의 그늘 */
+  sideDark: string;
+  ui: string;
   robot: RobotLook;
   Goal: () => ReactElement;
   Obstacle: () => ReactElement;
-  /** 길 칸 장식 (작은 무늬). 칸 좌표로 다양하게 */
+  /** 하늘에 떠 있는 작은 장식 (선택) */
+  Sky?: (p: { w: number; h: number }) => ReactElement | null;
+  /** 길 칸 장식 (아주 작게) */
   FloorDecor?: (p: { seed: number }) => ReactElement | null;
 }
+
+const dot = (seed: number, fill: string) =>
+  seed % 5 === 0 ? <circle cx={30 + (seed % 40)} cy={34 + ((seed * 7) % 30)} r="3.5" fill={fill} opacity="0.55" /> : null;
 
 export const THEMES: Theme[] = [
   {
@@ -39,32 +50,39 @@ export const THEMES: Theme[] = [
     robotName: "탐사 로버",
     goalName: "에너지 크리스털",
     obstacleName: "운석",
-    bg: "#1e2148",
-    floor: "#565c96",
-    floorAlt: "#4d5389",
-    grid: "#2c3060",
-    ui: "#6366f1",
-    bg2: "#3b3f8f",
-    side: "#191b3d",
-    robot: { body: "#e2e8f0", trim: "#6366f1", visor: "#1e293b", eye: "#67e8f9", feature: "antenna" },
+    bg: "#b8b2e8",
+    bg2: "#f6dcee",
+    floor: "#efeafc",
+    floorAlt: "#e6e0fa",
+    grid: "#d4cbf4",
+    side: "#c4b9ef",
+    sideDark: "#a598de",
+    ui: "#9f8fe0",
+    robot: { body: "#fdfbff", shade: "#e3dcf7", trim: "#a796e3", visor: "#4d4878", eye: "#ffd3a1", feature: "antenna" },
     Goal: () => (
       <g>
-        <ellipse cx="50" cy="84" rx="26" ry="6" fill="#000" opacity="0.25" />
-        <path d="M50 12 L72 40 L60 84 L40 84 L28 40 Z" fill="#a78bfa" stroke="#4c1d95" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M50 12 L56 40 L50 84 L44 40 Z" fill="#ddd6fe" />
-        <circle cx="70" cy="22" r="4" fill="#fde68a" />
+        <path d="M50 10 L70 46 L50 88 Z" fill="#a8ead9" />
+        <path d="M50 10 L30 46 L50 88 Z" fill="#cdf5ea" />
+        <path d="M50 10 L70 46 L50 52 L30 46 Z" fill="#e8fbf6" opacity="0.8" />
       </g>
     ),
     Obstacle: () => (
       <g>
-        <path d="M18 60 Q14 30 40 20 Q70 12 84 40 Q92 70 64 84 Q30 92 18 60 Z" fill="#8b5e3c" stroke="#3f2a1a" strokeWidth="3" />
-        <circle cx="40" cy="44" r="9" fill="#6b4529" />
-        <circle cx="64" cy="62" r="7" fill="#6b4529" />
-        <circle cx="62" cy="34" r="4" fill="#6b4529" />
+        <path d="M22 60 L36 30 L64 26 L80 52 L68 82 L34 84 Z" fill="#cbbff2" />
+        <path d="M50 28 L64 26 L80 52 L68 82 L50 84 Z" fill="#b2a3e8" />
+        <circle cx="42" cy="54" r="7" fill="#b9acee" />
+        <circle cx="62" cy="66" r="5" fill="#9f8edd" />
       </g>
     ),
-    FloorDecor: ({ seed }) =>
-      seed % 5 === 0 ? <circle cx={30 + (seed % 40)} cy={30 + ((seed * 7) % 40)} r="5" fill="#000" opacity="0.15" /> : null,
+    Sky: ({ w }) => (
+      <g opacity="0.75">
+        <circle cx={w - 60} cy={-26} r="22" fill="#fff4f8" />
+        <circle cx="40" cy="-34" r="4" fill="#fff" />
+        <circle cx={w * 0.45} cy="-44" r="3" fill="#fff" />
+        <path d={`M${w * 0.7} -50 l4 8 l-4 8 l-4 -8 Z`} fill="#fff" />
+      </g>
+    ),
+    FloorDecor: ({ seed }) => dot(seed, "#cfc4f3"),
   },
   {
     id: "ocean",
@@ -72,36 +90,41 @@ export const THEMES: Theme[] = [
     robotName: "잠수정",
     goalName: "보물 상자",
     obstacleName: "산호초",
-    bg: "#0b4566",
-    floor: "#2f8fb8",
-    floorAlt: "#2a84ab",
-    grid: "#0e5378",
-    ui: "#0284c7",
-    bg2: "#1683b0",
-    side: "#083650",
-    robot: { body: "#facc15", trim: "#f97316", visor: "#0c4a6e", eye: "#7dd3fc", feature: "periscope" },
+    bg: "#97cfdc",
+    bg2: "#e6f6f2",
+    floor: "#eaf7f6",
+    floorAlt: "#dff2f2",
+    grid: "#c2e4e4",
+    side: "#a9d9db",
+    sideDark: "#85c2c7",
+    ui: "#7cc3cc",
+    robot: { body: "#fff6dc", shade: "#f3e2b3", trim: "#f2a983", visor: "#36596a", eye: "#b8f1ff", feature: "periscope" },
     Goal: () => (
       <g>
-        <rect x="18" y="44" width="64" height="38" rx="4" fill="#b45309" stroke="#451a03" strokeWidth="3" />
-        <path d="M18 46 Q50 18 82 46 Z" fill="#d97706" stroke="#451a03" strokeWidth="3" />
-        <rect x="44" y="44" width="12" height="16" rx="2" fill="#fde047" stroke="#451a03" strokeWidth="2" />
-        <circle cx="30" cy="36" r="4" fill="#fde047" />
-        <circle cx="66" cy="34" r="3" fill="#fde047" />
+        <rect x="20" y="48" width="60" height="40" rx="6" fill="#f7c9a6" />
+        <rect x="50" y="48" width="30" height="40" rx="6" fill="#ecb48c" />
+        <path d="M20 50 Q20 26 50 26 Q80 26 80 50 Z" fill="#fbd9bd" />
+        <path d="M50 26 Q80 26 80 50 L50 50 Z" fill="#f2c4a1" />
+        <rect x="45" y="46" width="10" height="14" rx="3" fill="#ffe9a8" />
       </g>
     ),
     Obstacle: () => (
-      <g fill="none" strokeLinecap="round" strokeWidth="9">
-        <path d="M50 90 L50 50 L32 28 M50 60 L70 34 M70 34 L74 18 M32 28 L26 14" stroke="#f472b6" />
-        <path d="M24 90 L26 66 L14 52 M76 90 L78 64 L88 50" stroke="#fb7185" />
+      <g>
+        <rect x="24" y="44" width="16" height="46" rx="8" fill="#f6b8c3" />
+        <rect x="42" y="22" width="18" height="68" rx="9" fill="#f3a5b5" />
+        <rect x="51" y="22" width="9" height="68" rx="4.5" fill="#e891a3" />
+        <rect x="62" y="38" width="15" height="52" rx="7.5" fill="#f6b8c3" />
+        <rect x="70" y="38" width="7" height="52" rx="3.5" fill="#ea9cae" />
       </g>
     ),
-    FloorDecor: ({ seed }) =>
-      seed % 6 === 1 ? (
-        <g fill="#e0f2fe" opacity="0.5">
-          <circle cx="24" cy="70" r="4" />
-          <circle cx="32" cy="58" r="2.5" />
-        </g>
-      ) : null,
+    Sky: ({ w }) => (
+      <g opacity="0.7">
+        <circle cx={w - 70} cy="-36" r="6" fill="none" stroke="#fff" strokeWidth="2" />
+        <circle cx={w - 50} cy="-20" r="3.5" fill="none" stroke="#fff" strokeWidth="2" />
+        <circle cx="50" cy="-30" r="4.5" fill="none" stroke="#fff" strokeWidth="2" />
+      </g>
+    ),
+    FloorDecor: ({ seed }) => dot(seed, "#bfe3e3"),
   },
   {
     id: "town",
@@ -109,32 +132,41 @@ export const THEMES: Theme[] = [
     robotName: "배달 로봇",
     goalName: "택배 상자",
     obstacleName: "공사 펜스",
-    bg: "#7c9a5a",
-    floor: "#d6d3d1",
-    floorAlt: "#cfcbc8",
-    grid: "#a8a29e",
-    ui: "#ea580c",
-    bg2: "#a7c47f",
-    side: "#4f6838",
-    robot: { body: "#f8fafc", trim: "#f97316", visor: "#1f2937", eye: "#4ade80", feature: "cap" },
+    bg: "#f3c9c0",
+    bg2: "#fdf1e8",
+    floor: "#fbf3ec",
+    floorAlt: "#f6ebe2",
+    grid: "#ead8cb",
+    side: "#e8cdbd",
+    sideDark: "#d6b19d",
+    ui: "#ef9f8f",
+    robot: { body: "#ffffff", shade: "#efe6ee", trim: "#f2a294", visor: "#4a3f58", eye: "#a8e6cf", feature: "cap" },
     Goal: () => (
       <g>
-        <path d="M20 36 L50 22 L80 36 L80 76 L50 90 L20 76 Z" fill="#d6a46a" stroke="#78350f" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M20 36 L50 50 L80 36 M50 50 L50 90" stroke="#78350f" strokeWidth="3" fill="none" />
-        <path d="M35 29 L65 43" stroke="#fef3c7" strokeWidth="6" />
+        <path d="M50 30 L80 44 L50 58 L20 44 Z" fill="#f3d7b4" />
+        <path d="M20 44 L50 58 L50 90 L20 76 Z" fill="#e8c399" />
+        <path d="M80 44 L50 58 L50 90 L80 76 Z" fill="#d9ad80" />
+        <path d="M35 37 L65 51" stroke="#fff6e8" strokeWidth="6" />
       </g>
     ),
     Obstacle: () => (
       <g>
-        <rect x="16" y="76" width="10" height="14" fill="#374151" />
-        <rect x="74" y="76" width="10" height="14" fill="#374151" />
-        <rect x="10" y="30" width="80" height="46" rx="4" fill="#fff" stroke="#1f2937" strokeWidth="3" />
-        <path d="M14 30 L34 30 L14 60 Z M44 30 L64 30 L30 76 L14 76 Z M74 30 L90 30 L90 40 L62 76 L46 76 Z M90 58 L90 76 L78 76 Z" fill="#f97316" />
-        <circle cx="20" cy="24" r="6" fill="#facc15" stroke="#1f2937" strokeWidth="2" />
-        <circle cx="80" cy="24" r="6" fill="#facc15" stroke="#1f2937" strokeWidth="2" />
+        <rect x="24" y="36" width="9" height="54" rx="4" fill="#e8cdbd" />
+        <rect x="67" y="36" width="9" height="54" rx="4" fill="#d6b19d" />
+        <rect x="16" y="42" width="68" height="15" rx="7.5" fill="#f6b09a" />
+        <rect x="50" y="42" width="34" height="15" rx="7.5" fill="#ec9a83" />
+        <path d="M30 42 L40 42 L33 57 L23 57 Z M54 42 L64 42 L57 57 L47 57 Z" fill="#fff4ec" opacity="0.9" />
+        <rect x="16" y="64" width="68" height="11" rx="5.5" fill="#f6b09a" />
+        <rect x="50" y="64" width="34" height="11" rx="5.5" fill="#ec9a83" />
       </g>
     ),
-    FloorDecor: ({ seed }) => (seed % 4 === 2 ? <rect x="44" y="20" width="12" height="60" fill="#fafaf9" opacity="0.6" /> : null),
+    Sky: ({ w }) => (
+      <g opacity="0.8">
+        <circle cx={w - 64} cy="-30" r="20" fill="#fff3e6" />
+        <rect x="40" y="-42" width="56" height="10" rx="5" fill="#fff" opacity="0.7" />
+      </g>
+    ),
+    FloorDecor: ({ seed }) => (seed % 4 === 2 ? <rect x="46" y="28" width="8" height="44" rx="4" fill="#ffffff" opacity="0.7" /> : null),
   },
   {
     id: "forest",
@@ -142,41 +174,40 @@ export const THEMES: Theme[] = [
     robotName: "탐험 로봇",
     goalName: "길 잃은 동물 친구",
     obstacleName: "나무",
-    bg: "#2f5d34",
-    floor: "#d9c08a",
-    floorAlt: "#cfb47b",
-    grid: "#3f7a45",
-    ui: "#16a34a",
-    bg2: "#4f8a52",
-    side: "#1f4024",
-    robot: { body: "#86efac", trim: "#15803d", visor: "#14532d", eye: "#fef08a", feature: "leaf" },
+    bg: "#b9dfc1",
+    bg2: "#f0f8e6",
+    floor: "#eff7e7",
+    floorAlt: "#e5f1dc",
+    grid: "#d0e6c4",
+    side: "#bddcae",
+    sideDark: "#9cc78c",
+    ui: "#8fcf9f",
+    robot: { body: "#fdfdf6", shade: "#e6efdc", trim: "#93cfa2", visor: "#3f5a48", eye: "#fff1a8", feature: "leaf" },
     Goal: () => (
       <g>
-        <ellipse cx="34" cy="24" rx="8" ry="18" fill="#fef3c7" stroke="#92400e" strokeWidth="3" />
-        <ellipse cx="66" cy="24" rx="8" ry="18" fill="#fef3c7" stroke="#92400e" strokeWidth="3" />
-        <circle cx="50" cy="58" r="28" fill="#fef3c7" stroke="#92400e" strokeWidth="3" />
-        <circle cx="40" cy="54" r="4" fill="#1f2937" />
-        <circle cx="60" cy="54" r="4" fill="#1f2937" />
-        <ellipse cx="50" cy="64" rx="5" ry="3.5" fill="#f472b6" />
-        <circle cx="32" cy="66" r="5" fill="#fda4af" opacity="0.7" />
-        <circle cx="68" cy="66" r="5" fill="#fda4af" opacity="0.7" />
+        <ellipse cx="38" cy="26" rx="7" ry="18" fill="#fde9e4" />
+        <ellipse cx="62" cy="26" rx="7" ry="18" fill="#f5d6cf" />
+        <circle cx="50" cy="62" r="26" fill="#fff4f0" />
+        <path d="M50 36 A26 26 0 0 1 50 88 Z" fill="#f8e3dc" />
+        <circle cx="41" cy="58" r="3.5" fill="#5b4b5e" />
+        <circle cx="59" cy="58" r="3.5" fill="#5b4b5e" />
+        <ellipse cx="50" cy="67" rx="4" ry="3" fill="#f3a5b5" />
       </g>
     ),
     Obstacle: () => (
       <g>
-        <rect x="42" y="64" width="16" height="26" fill="#78350f" />
-        <circle cx="50" cy="40" r="28" fill="#15803d" stroke="#14532d" strokeWidth="3" />
-        <circle cx="32" cy="56" r="16" fill="#16a34a" stroke="#14532d" strokeWidth="3" />
-        <circle cx="68" cy="56" r="16" fill="#16a34a" stroke="#14532d" strokeWidth="3" />
+        <rect x="45" y="72" width="10" height="18" rx="3" fill="#d8b594" />
+        <path d="M50 8 L76 76 L24 76 Z" fill="#a9dbb0" />
+        <path d="M50 8 L76 76 L50 76 Z" fill="#8ccc98" />
       </g>
     ),
-    FloorDecor: ({ seed }) =>
-      seed % 5 === 3 ? (
-        <g fill="#65a30d">
-          <path d="M20 80 l4 -10 l4 10 Z" />
-          <path d="M28 82 l3 -8 l3 8 Z" />
-        </g>
-      ) : null,
+    Sky: ({ w }) => (
+      <g opacity="0.75">
+        <circle cx={w - 58} cy="-28" r="18" fill="#fffbe6" />
+        <ellipse cx="70" cy="-34" rx="24" ry="7" fill="#fff" />
+      </g>
+    ),
+    FloorDecor: ({ seed }) => dot(seed, "#c9e3b8"),
   },
   {
     id: "desert",
@@ -184,31 +215,35 @@ export const THEMES: Theme[] = [
     robotName: "탐사 로봇",
     goalName: "오아시스",
     obstacleName: "선인장",
-    bg: "#c98a3e",
-    floor: "#f5dfae",
-    floorAlt: "#efd59c",
-    grid: "#d9a35a",
-    ui: "#d97706",
-    bg2: "#ecc27a",
-    side: "#8f5b20",
-    robot: { body: "#fb923c", trim: "#9a3412", visor: "#431407", eye: "#fde68a", feature: "hat" },
+    bg: "#f4cfa4",
+    bg2: "#fff2e0",
+    floor: "#fcf1e2",
+    floorAlt: "#f8e8d3",
+    grid: "#efd8bb",
+    side: "#ecd0ab",
+    sideDark: "#dcb487",
+    ui: "#e9a46f",
+    robot: { body: "#fffaf2", shade: "#f2e3cf", trim: "#ecab7c", visor: "#5a4636", eye: "#a9e7ff", feature: "hat" },
     Goal: () => (
       <g>
-        <ellipse cx="50" cy="72" rx="36" ry="16" fill="#38bdf8" stroke="#0369a1" strokeWidth="3" />
-        <ellipse cx="44" cy="70" rx="12" ry="4" fill="#bae6fd" />
-        <path d="M70 66 Q72 40 66 22" stroke="#92400e" strokeWidth="6" fill="none" />
-        <path d="M66 22 Q50 14 38 26 M66 22 Q80 10 92 22 M66 22 Q60 34 50 40 M66 22 Q80 30 86 40" stroke="#16a34a" strokeWidth="6" fill="none" strokeLinecap="round" />
+        <ellipse cx="50" cy="78" rx="36" ry="12" fill="#a9dff0" />
+        <ellipse cx="44" cy="76" rx="16" ry="4" fill="#d5f2fa" />
+        <rect x="64" y="34" width="5" height="44" rx="2.5" fill="#dcb487" />
+        <path d="M66 34 Q50 24 38 34 Q52 32 66 34 Z M66 34 Q82 24 92 34 Q80 32 66 34 Z" fill="#9fd6a8" />
       </g>
     ),
     Obstacle: () => (
-      <g stroke="#14532d" strokeWidth="3">
-        <rect x="40" y="14" width="20" height="76" rx="10" fill="#22c55e" />
-        <path d="M40 54 L26 54 Q20 54 20 46 L20 32" fill="none" stroke="#22c55e" strokeWidth="12" strokeLinecap="round" />
-        <path d="M60 44 L74 44 Q80 44 80 36 L80 26" fill="none" stroke="#22c55e" strokeWidth="12" strokeLinecap="round" />
+      <g>
+        <rect x="40" y="16" width="22" height="74" rx="11" fill="#a8dcbf" />
+        <rect x="51" y="16" width="11" height="74" rx="5.5" fill="#8ccaa8" />
+        <rect x="22" y="40" width="12" height="28" rx="6" fill="#a8dcbf" />
+        <rect x="22" y="58" width="22" height="10" rx="5" fill="#a8dcbf" />
+        <rect x="68" y="30" width="12" height="26" rx="6" fill="#8ccaa8" />
+        <rect x="58" y="48" width="22" height="10" rx="5" fill="#8ccaa8" />
       </g>
     ),
-    FloorDecor: ({ seed }) =>
-      seed % 4 === 1 ? <path d="M16 70 Q34 60 52 70 T88 70" stroke="#d9b779" strokeWidth="3" fill="none" /> : null,
+    Sky: ({ w }) => <circle cx={w - 62} cy="-30" r="22" fill="#fff6e8" opacity="0.85" />,
+    FloorDecor: ({ seed }) => (seed % 4 === 1 ? <path d="M22 60 Q40 52 58 60 T88 60" stroke="#efd6b6" strokeWidth="3" fill="none" /> : null),
   },
   {
     id: "snow",
@@ -216,34 +251,39 @@ export const THEMES: Theme[] = [
     robotName: "썰매 로봇",
     goalName: "이글루",
     obstacleName: "얼음 바위",
-    bg: "#9cc3db",
-    floor: "#f8fafc",
-    floorAlt: "#eef4f8",
-    grid: "#bcd6e6",
-    ui: "#0ea5e9",
-    bg2: "#e3f2fb",
-    side: "#6f9bb8",
-    robot: { body: "#ef4444", trim: "#f8fafc", visor: "#1e293b", eye: "#bae6fd", feature: "beanie" },
+    bg: "#c9dcf1",
+    bg2: "#f7f9fd",
+    floor: "#ffffff",
+    floorAlt: "#f3f7fc",
+    grid: "#dde8f4",
+    side: "#d3e1f0",
+    sideDark: "#b4c9e1",
+    ui: "#9ec3e6",
+    robot: { body: "#ffffff", shade: "#e8eef7", trim: "#f2a8ba", visor: "#3f4a63", eye: "#c2f0ff", feature: "beanie" },
     Goal: () => (
       <g>
-        <path d="M12 84 Q12 22 50 22 Q88 22 88 84 Z" fill="#fff" stroke="#64748b" strokeWidth="3" />
-        <path d="M20 54 L80 54 M14 70 L86 70 M36 22 L36 54 M64 22 L64 54 M50 54 L50 70" stroke="#cbd5e1" strokeWidth="2.5" />
-        <path d="M38 84 Q38 62 50 62 Q62 62 62 84 Z" fill="#334155" />
+        <path d="M14 88 A36 36 0 0 1 86 88 Z" fill="#ffffff" />
+        <path d="M50 52 A36 36 0 0 1 86 88 L50 88 Z" fill="#e3ecf7" />
+        <path d="M38 88 A12 12 0 0 1 62 88 Z" fill="#7c8db0" />
       </g>
     ),
     Obstacle: () => (
       <g>
-        <path d="M14 84 L24 40 L46 18 L74 30 L88 62 L80 86 Z" fill="#7dd3fc" stroke="#0c4a6e" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M46 18 L50 50 L24 40 M50 50 L88 62 M50 50 L80 86" stroke="#e0f2fe" strokeWidth="3" fill="none" />
+        <path d="M26 88 L40 30 L52 88 Z" fill="#d6e8f8" />
+        <path d="M40 30 L52 88 L46 88 Z" fill="#bcd6f0" />
+        <path d="M44 88 L62 14 L80 88 Z" fill="#c4def5" />
+        <path d="M62 14 L80 88 L62 88 Z" fill="#a8cbec" />
       </g>
     ),
-    FloorDecor: ({ seed }) =>
-      seed % 5 === 2 ? (
-        <g fill="#dbeafe">
-          <circle cx="26" cy="30" r="3" />
-          <circle cx="72" cy="66" r="2.5" />
-        </g>
-      ) : null,
+    Sky: ({ w }) => (
+      <g opacity="0.85" fill="#fff">
+        <circle cx="46" cy="-36" r="3" />
+        <circle cx={w * 0.4} cy="-22" r="2.5" />
+        <circle cx={w * 0.7} cy="-44" r="3.5" />
+        <circle cx={w - 40} cy="-26" r="2.5" />
+      </g>
+    ),
+    FloorDecor: ({ seed }) => dot(seed, "#dbe7f4"),
   },
 ];
 

@@ -42,7 +42,7 @@ export function ProgramEditor({
     <DndContext sensors={sensors} onDragStart={() => setDragging(true)} onDragCancel={() => setDragging(false)} onDragEnd={onDragEnd}>
       <div
         data-testid="program"
-        className={`panel3d relative min-h-[72px] rounded-2xl border-4 p-2 ${selected === null && !locked ? "border-amber-400" : "border-transparent"} ${
+        className={`panel3d relative min-h-[72px] rounded-2xl border-4 p-2 ${selected === null && !locked ? "border-[#f3c98b]" : "border-transparent"} ${
           layout === "row" ? "overflow-x-auto overflow-y-hidden" : "overflow-y-auto"
         } h-full`}
         onClick={(e) => {
@@ -94,7 +94,7 @@ function BlockList({ blocks, parent, ctx }: { blocks: EBlock[]; parent: string |
       {ctx.selected === parent && !ctx.locked ? (
         <div
           aria-hidden
-          className={`flex items-center justify-center rounded-lg border-2 border-dashed border-amber-400 text-sm font-bold text-amber-600 ${
+          className={`flex items-center justify-center rounded-lg border-2 border-dashed border-[#f3c98b] text-sm font-bold text-[#c4895a] ${
             isRow ? "min-w-10 px-1" : "h-8"
           }`}
         >
@@ -112,7 +112,7 @@ function Slot({ parent, index, ctx }: { parent: string | null; index: number; ct
   return (
     <div
       ref={setNodeRef}
-      className={`rounded ${isOver ? "bg-amber-400" : "bg-amber-200/70"} ${isRow ? "w-4 self-stretch" : "h-4"}`}
+      className={`rounded ${isOver ? "bg-[#f3c98b]" : "bg-[#f3c98b]/50"} ${isRow ? "w-4 self-stretch" : "h-4"}`}
     />
   );
 }
@@ -136,7 +136,7 @@ function BlockView({ block, ctx }: { block: EBlock; ctx: RenderCtx }) {
 
   const header = (
     <div
-      className={`blk3d flex min-h-14 items-center gap-1.5 rounded-xl px-2 text-white ${ring}`}
+      className={`blk3d flex min-h-14 items-center gap-1.5 rounded-xl px-2 text-[#3d3a5c] ${ring}`}
       style={{ background: meta.bg, ["--blk-edge" as string]: meta.border }}
       {...listeners}
       {...attributes}
@@ -155,7 +155,7 @@ function BlockView({ block, ctx }: { block: EBlock; ctx: RenderCtx }) {
         countOpen === block.id && !ctx.locked ? (
           <span className="flex items-center gap-1" onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
             <button
-              className="h-14 w-14 rounded-lg bg-white/90 text-3xl font-black text-orange-800 disabled:opacity-40"
+              className="h-14 w-14 rounded-lg bg-white/90 text-3xl font-black text-[#3d3a5c] disabled:opacity-40"
               onClick={() => setCount(block.id, block.n - 1)}
               disabled={block.n <= REPEAT_MIN}
               aria-label="횟수 줄이기"
@@ -164,7 +164,7 @@ function BlockView({ block, ctx }: { block: EBlock; ctx: RenderCtx }) {
             </button>
             <span className="w-8 text-center text-2xl font-black">{block.n}</span>
             <button
-              className={`h-14 w-14 rounded-lg bg-white/90 text-3xl font-black text-orange-800 disabled:opacity-40 ${tut("count") ? "glow" : ""}`}
+              className={`h-14 w-14 rounded-lg bg-white/90 text-3xl font-black text-[#3d3a5c] disabled:opacity-40 ${tut("count") ? "glow" : ""}`}
               onClick={() => setCount(block.id, block.n + 1)}
               disabled={block.n >= REPEAT_MAX}
               aria-label="횟수 늘리기"
@@ -178,7 +178,7 @@ function BlockView({ block, ctx }: { block: EBlock; ctx: RenderCtx }) {
           </span>
         ) : (
           <button
-            className={`flex h-12 min-w-12 items-center justify-center rounded-lg bg-white text-2xl font-black text-orange-800 ${tut("count") ? "glow" : ""}`}
+            className={`flex h-12 min-w-12 items-center justify-center rounded-lg bg-white text-2xl font-black text-[#3d3a5c] ${tut("count") ? "glow" : ""}`}
             onClick={(e) => {
               e.stopPropagation();
               openCount(block.id);
@@ -194,7 +194,7 @@ function BlockView({ block, ctx }: { block: EBlock; ctx: RenderCtx }) {
       ) : null}
       {block.t === "ifColor" ? (
         <button
-          className="h-12 rounded-lg bg-white/90 px-2 text-sm font-bold text-emerald-900"
+          className="h-12 rounded-lg bg-white/90 px-2 text-sm font-bold text-[#3d3a5c]"
           onClick={(e) => {
             e.stopPropagation();
             setColor(block.id, block.color === "red" ? "blue" : "red");
@@ -208,7 +208,7 @@ function BlockView({ block, ctx }: { block: EBlock; ctx: RenderCtx }) {
       ) : null}
       {!ctx.locked ? (
         <button
-          className="ml-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-black/25 text-2xl font-black"
+          className="ml-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/55 text-2xl font-black"
           aria-label={`${meta.label} 블록 지우기`}
           onClick={(e) => {
             e.stopPropagation();
