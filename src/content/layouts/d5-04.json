@@ -1,0 +1,141 @@
+{
+  "id": "d5-04",
+  "contentVersion": 1,
+  "grade": "D5",
+  "size": [
+    7,
+    7
+  ],
+  "start": {
+    "x": 6,
+    "y": 6,
+    "dir": "N"
+  },
+  "goal": {
+    "x": 1,
+    "y": 1
+  },
+  "walls": [
+    [
+      2,
+      0
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      3
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      5,
+      4
+    ],
+    [
+      5,
+      5
+    ],
+    [
+      0,
+      6
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      5,
+      6
+    ]
+  ],
+  "colors": {
+    "red": [
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        3
+      ]
+    ],
+    "blue": [
+      [
+        5,
+        3
+      ]
+    ]
+  },
+  "allowedBlocks": [
+    "forward",
+    "left",
+    "right",
+    "repeat",
+    "ifWall",
+    "ifColor"
+  ],
+  "maxNesting": 2,
+  "target": 7,
+  "targetVerified": true,
+  "solution": [
+    "forward",
+    {
+      "repeat": 9,
+      "body": [
+        "forward",
+        {
+          "ifColor": "red",
+          "body": [
+            "left"
+          ]
+        },
+        {
+          "ifWall": [
+            "right"
+          ]
+        }
+      ]
+    }
+  ]
+}

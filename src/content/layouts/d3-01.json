@@ -1,0 +1,72 @@
+{
+  "id": "d3-01",
+  "contentVersion": 1,
+  "grade": "D3",
+  "size": [
+    6,
+    6
+  ],
+  "start": {
+    "x": 4,
+    "y": 5,
+    "dir": "N"
+  },
+  "goal": {
+    "x": 1,
+    "y": 0
+  },
+  "walls": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      2,
+      4
+    ]
+  ],
+  "colors": {
+    "red": [],
+    "blue": []
+  },
+  "allowedBlocks": [
+    "forward",
+    "left",
+    "right",
+    "repeat"
+  ],
+  "maxNesting": 1,
+  "target": 5,
+  "targetVerified": true,
+  "solution": [
+    {
+      "repeat": 5,
+      "body": [
+        "forward"
+      ]
+    },
+    "left",
+    {
+      "repeat": 3,
+      "body": [
+        "forward"
+      ]
+    }
+  ]
+}

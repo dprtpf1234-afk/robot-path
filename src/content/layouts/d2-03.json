@@ -1,0 +1,86 @@
+{
+  "id": "d2-03",
+  "contentVersion": 1,
+  "grade": "D2",
+  "size": [
+    6,
+    6
+  ],
+  "start": {
+    "x": 4,
+    "y": 0,
+    "dir": "S"
+  },
+  "goal": {
+    "x": 2,
+    "y": 3
+  },
+  "walls": [
+    [
+      2,
+      0
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      3,
+      5
+    ]
+  ],
+  "colors": {
+    "red": [],
+    "blue": []
+  },
+  "allowedBlocks": [
+    "forward",
+    "left",
+    "right"
+  ],
+  "maxNesting": 0,
+  "target": 8,
+  "targetVerified": true,
+  "solution": [
+    "forward",
+    "right",
+    "forward",
+    "left",
+    "forward",
+    "forward",
+    "right",
+    "forward"
+  ]
+}

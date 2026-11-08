@@ -1,0 +1,89 @@
+{
+  "id": "t2",
+  "contentVersion": 1,
+  "grade": "T",
+  "size": [
+    6,
+    6
+  ],
+  "start": {
+    "x": 0,
+    "y": 3,
+    "dir": "E"
+  },
+  "goal": {
+    "x": 5,
+    "y": 3
+  },
+  "walls": [
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      5,
+      4
+    ]
+  ],
+  "colors": {
+    "red": [],
+    "blue": []
+  },
+  "allowedBlocks": [
+    "forward",
+    "left",
+    "right",
+    "repeat"
+  ],
+  "maxNesting": 1,
+  "target": 2,
+  "targetVerified": true,
+  "solution": [
+    {
+      "repeat": 5,
+      "body": [
+        "forward"
+      ]
+    }
+  ]
+}

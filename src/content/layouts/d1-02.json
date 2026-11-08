@@ -1,0 +1,70 @@
+{
+  "id": "d1-02",
+  "contentVersion": 1,
+  "grade": "D1",
+  "size": [
+    5,
+    5
+  ],
+  "start": {
+    "x": 0,
+    "y": 1,
+    "dir": "N"
+  },
+  "goal": {
+    "x": 2,
+    "y": 0
+  },
+  "walls": [
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      4,
+      3
+    ],
+    [
+      1,
+      4
+    ]
+  ],
+  "colors": {
+    "red": [],
+    "blue": []
+  },
+  "allowedBlocks": [
+    "forward",
+    "left",
+    "right"
+  ],
+  "maxNesting": 0,
+  "target": 4,
+  "targetVerified": true,
+  "solution": [
+    "forward",
+    "right",
+    "forward",
+    "forward"
+  ]
+}

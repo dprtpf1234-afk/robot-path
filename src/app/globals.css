@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --color-ink: #1f2937;
+  --color-brand: #4f46e5;
+  --color-brand-dark: #3730a3;
+  --color-blk-move: #2563eb;
+  --color-blk-turn: #7c3aed;
+  --color-blk-repeat: #c2410c;
+  --color-blk-if: #047857;
+  --color-blk-until: #be185d;
+}
+
+html,
+body {
+  height: 100%;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  background: #f1f5f9;
+  color: var(--color-ink);
+  font-size: 18px;
+  touch-action: manipulation;
+}
+button {
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+.robot {
+  transition: transform var(--step-ms, 400ms) ease-in-out;
+}
+@keyframes shake {
+  0%, 100% { translate: 0 0; }
+  20% { translate: -8px 0; }
+  40% { translate: 8px 0; }
+  60% { translate: -6px 0; }
+  80% { translate: 6px 0; }
+}
+.shake { animation: shake 0.45s ease-in-out; }
+@keyframes pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.pop { animation: pop 0.4s ease-out both; }
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+  50% { box-shadow: 0 0 0 8px rgba(250, 204, 21, 0.75); }
+}
+.glow { animation: glow 1.4s ease-in-out infinite; }
+@keyframes finger {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-6px, -10px); }
+}
+.finger { animation: finger 0.9s ease-in-out infinite; }
+@keyframes flash-in {
+  0% { background-color: #fde68a; }
+  100% { background-color: transparent; }
+}
+.flash-in { animation: flash-in 2.5s ease-out; }
+@keyframes confetti-fall {
+  0% { transform: translateY(-20vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(540deg); opacity: 0.8; }
+}
+.confetti { animation: confetti-fall 2.4s linear forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .robot { transition: none; }
+  .shake, .pop, .glow, .finger, .flash-in, .confetti { animation: none; }
+}

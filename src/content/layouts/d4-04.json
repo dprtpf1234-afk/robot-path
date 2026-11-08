@@ -1,0 +1,115 @@
+{
+  "id": "d4-04",
+  "contentVersion": 1,
+  "grade": "D4",
+  "size": [
+    7,
+    7
+  ],
+  "start": {
+    "x": 4,
+    "y": 2,
+    "dir": "S"
+  },
+  "goal": {
+    "x": 0,
+    "y": 5
+  },
+  "walls": [
+    [
+      5,
+      0
+    ],
+    [
+      6,
+      0
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      6,
+      2
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      5,
+      3
+    ],
+    [
+      6,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      5,
+      4
+    ],
+    [
+      6,
+      4
+    ],
+    [
+      5,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      6
+    ]
+  ],
+  "colors": {
+    "red": [],
+    "blue": []
+  },
+  "allowedBlocks": [
+    "forward",
+    "left",
+    "right",
+    "repeat"
+  ],
+  "maxNesting": 2,
+  "target": 4,
+  "targetVerified": true,
+  "solution": [
+    {
+      "repeat": 3,
+      "body": [
+        {
+          "repeat": 4,
+          "body": [
+            "forward"
+          ]
+        },
+        "right"
+      ]
+    }
+  ]
+}
