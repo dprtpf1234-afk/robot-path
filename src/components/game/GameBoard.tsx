@@ -191,10 +191,10 @@ export function GameBoard(props: GameBoardProps) {
             data-tut={isTut(p.key) ? "target" : undefined}
             onClick={() => tapPalette(p.t, p.color)}
             disabled={locked}
-            className={`flex min-h-16 flex-col items-center justify-center gap-0.5 rounded-2xl px-2 py-1 text-white shadow-md active:translate-y-0.5 disabled:opacity-50 ${
+            className={`blk3d flex min-h-16 flex-col items-center justify-center gap-0.5 rounded-2xl px-2 py-1 text-white disabled:opacity-50 ${
               isTut(p.key) || idleTarget === p.key ? "glow" : ""
             }`}
-            style={{ background: meta.bg, borderBottom: `5px solid ${meta.border}` }}
+            style={{ background: meta.bg, ["--blk-edge" as string]: meta.border }}
             aria-label={`${label} 블록 추가`}
           >
             <BlockIcon t={p.t} color={p.color} size={30} />
@@ -210,7 +210,7 @@ export function GameBoard(props: GameBoardProps) {
       <button
         onClick={() => ed().doUndo()}
         disabled={locked || !undo}
-        className="h-14 min-w-14 rounded-xl bg-white px-3 text-base font-bold shadow disabled:opacity-40"
+        className="chip3d h-14 min-w-14 rounded-xl px-3 text-base font-bold disabled:opacity-40"
         aria-label="되돌리기"
       >
         ↶
@@ -218,20 +218,20 @@ export function GameBoard(props: GameBoardProps) {
       <button
         onClick={() => ed().clear()}
         disabled={locked || program.length === 0}
-        className="h-14 rounded-xl bg-white px-3 text-base font-bold whitespace-nowrap shadow disabled:opacity-40"
+        className="chip3d h-14 rounded-xl px-3 text-base font-bold whitespace-nowrap disabled:opacity-40"
       >
         {land ? "모두 지우기" : "지우기"}
       </button>
       <button
         onClick={() => setSpeed((s) => (s === 1 ? 2 : 1))}
-        className={`h-14 min-w-14 rounded-xl px-3 text-base font-black shadow ${speed === 2 ? "bg-amber-400" : "bg-white"}`}
+        className={`h-14 min-w-14 rounded-xl px-3 text-base font-black ${speed === 2 ? "blk3d bg-amber-400" : "chip3d"}`}
         aria-label={`속도 ${speed}배`}
         aria-pressed={speed === 2}
       >
         {speed}×
       </button>
       {props.showHintButton && props.hint ? (
-        <button onClick={() => setShowHint(true)} className="h-14 rounded-xl bg-yellow-300 px-3 text-base font-bold shadow">
+        <button onClick={() => setShowHint(true)} className="blk3d h-14 rounded-xl bg-yellow-300 px-3 text-base font-bold" style={{ ["--blk-edge" as string]: "#ca8a04" }}>
           💡 힌트
         </button>
       ) : null}
@@ -245,10 +245,10 @@ export function GameBoard(props: GameBoardProps) {
       disabled={locked || props.canRun === false}
       data-testid="run"
       data-tut={tutTarget?.kind === "run" ? "target" : undefined}
-      className={`flex h-16 shrink-0 min-w-28 items-center justify-center gap-2 rounded-2xl bg-green-500 px-5 text-2xl font-black text-white shadow-lg active:translate-y-0.5 disabled:bg-slate-400 ${
+      className={`blk3d flex h-16 shrink-0 min-w-28 items-center justify-center gap-2 rounded-2xl bg-green-500 px-5 text-2xl font-black text-white disabled:bg-slate-400 ${
         tutTarget?.kind === "run" || idleTarget === "run" ? "glow" : ""
       }`}
-      style={{ borderBottom: "6px solid #15803d" }}
+      style={{ ["--blk-edge" as string]: "#15803d" }}
     >
       ▶ 실행
     </button>

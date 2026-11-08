@@ -2,6 +2,14 @@
  * 각 컴포넌트는 한 칸을 0~100 좌표로 그린다. 로봇은 북쪽(위)을 바라보는 모습으로 그리고, 화면에서 회전시킨다. */
 import type { ReactElement } from "react";
 
+export interface RobotLook {
+  body: string;
+  trim: string;
+  visor: string;
+  eye: string;
+  feature: "antenna" | "periscope" | "cap" | "leaf" | "hat" | "beanie";
+}
+
 export interface Theme {
   id: string;
   name: string;
@@ -13,24 +21,16 @@ export interface Theme {
   floorAlt: string;
   grid: string;
   ui: string; // 테마 강조색 (버튼 등)
-  Robot: () => ReactElement;
+  /** 2.5D 배경 밝은 쪽 / 보드 옆면 */
+  bg2: string;
+  side: string;
+  /** 2.5D 로봇 색과 머리 장식 (components/game/Robot25.tsx가 그림) */
+  robot: RobotLook;
   Goal: () => ReactElement;
   Obstacle: () => ReactElement;
   /** 길 칸 장식 (작은 무늬). 칸 좌표로 다양하게 */
   FloorDecor?: (p: { seed: number }) => ReactElement | null;
 }
-
-const eyes = (c = "#1f2937") => (
-  <>
-    <circle cx="40" cy="44" r="6" fill="#fff" />
-    <circle cx="60" cy="44" r="6" fill="#fff" />
-    <circle cx="40" cy="42" r="3" fill={c} />
-    <circle cx="60" cy="42" r="3" fill={c} />
-  </>
-);
-
-/** 바라보는 방향 표시(앞쪽 화살 코) */
-const nose = (fill: string) => <path d="M50 8 L60 22 L40 22 Z" fill={fill} stroke="#1f2937" strokeWidth="2" strokeLinejoin="round" />;
 
 export const THEMES: Theme[] = [
   {
@@ -44,20 +44,9 @@ export const THEMES: Theme[] = [
     floorAlt: "#4d5389",
     grid: "#2c3060",
     ui: "#6366f1",
-    Robot: () => (
-      <g>
-        <rect x="20" y="70" width="16" height="16" rx="5" fill="#374151" />
-        <rect x="64" y="70" width="16" height="16" rx="5" fill="#374151" />
-        <rect x="20" y="28" width="16" height="16" rx="5" fill="#374151" />
-        <rect x="64" y="28" width="16" height="16" rx="5" fill="#374151" />
-        <rect x="26" y="24" width="48" height="58" rx="12" fill="#e5e7eb" stroke="#1f2937" strokeWidth="3" />
-        <rect x="34" y="32" width="32" height="22" rx="8" fill="#60a5fa" />
-        {eyes()}
-        <line x1="50" y1="62" x2="50" y2="74" stroke="#1f2937" strokeWidth="3" />
-        <circle cx="50" cy="76" r="4" fill="#f59e0b" />
-        {nose("#f59e0b")}
-      </g>
-    ),
+    bg2: "#3b3f8f",
+    side: "#191b3d",
+    robot: { body: "#e2e8f0", trim: "#6366f1", visor: "#1e293b", eye: "#67e8f9", feature: "antenna" },
     Goal: () => (
       <g>
         <ellipse cx="50" cy="84" rx="26" ry="6" fill="#000" opacity="0.25" />
@@ -88,17 +77,9 @@ export const THEMES: Theme[] = [
     floorAlt: "#2a84ab",
     grid: "#0e5378",
     ui: "#0284c7",
-    Robot: () => (
-      <g>
-        <ellipse cx="50" cy="54" rx="26" ry="34" fill="#facc15" stroke="#1f2937" strokeWidth="3" />
-        <rect x="42" y="78" width="16" height="12" rx="3" fill="#a16207" />
-        <path d="M30 86 L50 92 L70 86" stroke="#1f2937" strokeWidth="3" fill="none" />
-        <circle cx="50" cy="46" r="14" fill="#7dd3fc" stroke="#1f2937" strokeWidth="3" />
-        <circle cx="45" cy="44" r="3" fill="#1f2937" />
-        <circle cx="55" cy="44" r="3" fill="#1f2937" />
-        {nose("#fb923c")}
-      </g>
-    ),
+    bg2: "#1683b0",
+    side: "#083650",
+    robot: { body: "#facc15", trim: "#f97316", visor: "#0c4a6e", eye: "#7dd3fc", feature: "periscope" },
     Goal: () => (
       <g>
         <rect x="18" y="44" width="64" height="38" rx="4" fill="#b45309" stroke="#451a03" strokeWidth="3" />
@@ -133,18 +114,9 @@ export const THEMES: Theme[] = [
     floorAlt: "#cfcbc8",
     grid: "#a8a29e",
     ui: "#ea580c",
-    Robot: () => (
-      <g>
-        <rect x="18" y="26" width="12" height="54" rx="6" fill="#1f2937" />
-        <rect x="70" y="26" width="12" height="54" rx="6" fill="#1f2937" />
-        <rect x="26" y="22" width="48" height="62" rx="10" fill="#f8fafc" stroke="#1f2937" strokeWidth="3" />
-        <rect x="32" y="56" width="36" height="22" rx="4" fill="#fb923c" />
-        <rect x="32" y="30" width="36" height="22" rx="6" fill="#1f2937" />
-        <circle cx="42" cy="41" r="4" fill="#4ade80" />
-        <circle cx="58" cy="41" r="4" fill="#4ade80" />
-        {nose("#fb923c")}
-      </g>
-    ),
+    bg2: "#a7c47f",
+    side: "#4f6838",
+    robot: { body: "#f8fafc", trim: "#f97316", visor: "#1f2937", eye: "#4ade80", feature: "cap" },
     Goal: () => (
       <g>
         <path d="M20 36 L50 22 L80 36 L80 76 L50 90 L20 76 Z" fill="#d6a46a" stroke="#78350f" strokeWidth="3" strokeLinejoin="round" />
@@ -175,17 +147,9 @@ export const THEMES: Theme[] = [
     floorAlt: "#cfb47b",
     grid: "#3f7a45",
     ui: "#16a34a",
-    Robot: () => (
-      <g>
-        <rect x="24" y="28" width="52" height="56" rx="14" fill="#86efac" stroke="#14532d" strokeWidth="3" />
-        <path d="M24 40 Q50 20 76 40" fill="#a16207" stroke="#14532d" strokeWidth="3" />
-        {eyes("#14532d")}
-        <path d="M40 64 Q50 72 60 64" stroke="#14532d" strokeWidth="3" fill="none" strokeLinecap="round" />
-        <rect x="14" y="50" width="10" height="20" rx="5" fill="#16a34a" />
-        <rect x="76" y="50" width="10" height="20" rx="5" fill="#16a34a" />
-        {nose("#facc15")}
-      </g>
-    ),
+    bg2: "#4f8a52",
+    side: "#1f4024",
+    robot: { body: "#86efac", trim: "#15803d", visor: "#14532d", eye: "#fef08a", feature: "leaf" },
     Goal: () => (
       <g>
         <ellipse cx="34" cy="24" rx="8" ry="18" fill="#fef3c7" stroke="#92400e" strokeWidth="3" />
@@ -225,16 +189,9 @@ export const THEMES: Theme[] = [
     floorAlt: "#efd59c",
     grid: "#d9a35a",
     ui: "#d97706",
-    Robot: () => (
-      <g>
-        <rect x="22" y="76" width="56" height="10" rx="5" fill="#57534e" />
-        <rect x="26" y="26" width="48" height="52" rx="10" fill="#fb923c" stroke="#7c2d12" strokeWidth="3" />
-        <rect x="20" y="20" width="60" height="12" rx="6" fill="#fde68a" stroke="#7c2d12" strokeWidth="3" />
-        {eyes("#7c2d12")}
-        <rect x="38" y="60" width="24" height="6" rx="3" fill="#7c2d12" />
-        {nose("#fde68a")}
-      </g>
-    ),
+    bg2: "#ecc27a",
+    side: "#8f5b20",
+    robot: { body: "#fb923c", trim: "#9a3412", visor: "#431407", eye: "#fde68a", feature: "hat" },
     Goal: () => (
       <g>
         <ellipse cx="50" cy="72" rx="36" ry="16" fill="#38bdf8" stroke="#0369a1" strokeWidth="3" />
@@ -264,18 +221,9 @@ export const THEMES: Theme[] = [
     floorAlt: "#eef4f8",
     grid: "#bcd6e6",
     ui: "#0ea5e9",
-    Robot: () => (
-      <g>
-        <path d="M22 88 L22 24 Q22 14 30 14" stroke="#475569" strokeWidth="5" fill="none" strokeLinecap="round" />
-        <path d="M78 88 L78 24 Q78 14 70 14" stroke="#475569" strokeWidth="5" fill="none" strokeLinecap="round" />
-        <rect x="28" y="28" width="44" height="54" rx="14" fill="#ef4444" stroke="#7f1d1d" strokeWidth="3" />
-        <rect x="34" y="34" width="32" height="20" rx="8" fill="#fff" />
-        <circle cx="42" cy="44" r="3.5" fill="#1f2937" />
-        <circle cx="58" cy="44" r="3.5" fill="#1f2937" />
-        <rect x="28" y="62" width="44" height="6" fill="#fff" />
-        {nose("#fbbf24")}
-      </g>
-    ),
+    bg2: "#e3f2fb",
+    side: "#6f9bb8",
+    robot: { body: "#ef4444", trim: "#f8fafc", visor: "#1e293b", eye: "#bae6fd", feature: "beanie" },
     Goal: () => (
       <g>
         <path d="M12 84 Q12 22 50 22 Q88 22 88 84 Z" fill="#fff" stroke="#64748b" strokeWidth="3" />

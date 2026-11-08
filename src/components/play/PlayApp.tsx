@@ -27,6 +27,7 @@ import {
 import { DEMO } from "@/lib/demo";
 import { enqueueStat, startAutoFlush } from "@/lib/sync";
 import { GameBoard } from "../game/GameBoard";
+import { MapView } from "../game/MapView";
 import { fromProgram, useEditor } from "../game/editorStore";
 import { Stars } from "../ui/Stars";
 import { RegisterModal } from "./RegisterModal";
@@ -100,7 +101,7 @@ export function PlayApp() {
 
   const soundBtn = (
     <button
-      className="h-12 min-w-12 rounded-xl bg-white/80 px-2 text-xl shadow"
+      className="chip3d h-12 min-w-12 rounded-xl px-2 text-xl"
       onClick={() => {
         setSoundOn(!sound);
         setSound(!sound);
@@ -153,6 +154,19 @@ export function PlayApp() {
   );
 }
 
+const DIORAMA = { 1: { layout: "t1", theme: "space" }, 2: { layout: "t2", theme: "ocean" }, 3: { layout: "t3", theme: "forest" } } as const;
+
+/** 챕터 카드 위의 작은 2.5D 미리보기 (그 장 튜토리얼 맵) */
+function ChapterDiorama({ chapter }: { chapter: 1 | 2 | 3 }) {
+  const d = DIORAMA[chapter];
+  const placed = useMemo(() => placeLayout(LAYOUTS_BY_ID[d.layout], "orig"), [d.layout]);
+  return (
+    <div className="-mx-1 -mt-1 mb-3 h-36 overflow-hidden rounded-2xl sm:h-44" aria-hidden>
+      <MapView placed={placed} theme={THEMES_BY_ID[d.theme]} robot={{ ...placed.start }} label={`${chapter}장 미리보기`} />
+    </div>
+  );
+}
+
 function unlocked(progress: Progress, s: StageSpec) {
   if (s.stage === 1) return true;
   const prev = stageOf(s.chapter, s.stage - 1)!;
@@ -179,7 +193,7 @@ function ChapterSelect({
             ← 홈
           </a>
         )}
-        <h1 className="flex-1 text-center text-2xl font-black sm:text-3xl">챕터를 골라요</h1>
+        <h1 className="flex-1 text-center text-2xl font-black text-indigo-950 sm:text-4xl">🤖 챕터를 골라요</h1>
         <span className="rounded-xl bg-amber-100 px-3 py-2 text-lg font-black text-amber-800" aria-label={`모은 별 ${total}개`}>
           ★ {total}
         </span>
@@ -190,7 +204,8 @@ function ChapterSelect({
           const stages = STAGES.filter((s) => s.chapter === c.chapter);
           const stars = stages.reduce((n, s) => n + (progress.best[s.id]?.stars ?? 0), 0);
           return (
-            <section key={c.chapter} className="rounded-3xl bg-white p-4 shadow-md" data-testid={`chapter-${c.chapter}`}>
+            <section key={c.chapter} className="panel3d rounded-3xl p-4" data-testid={`chapter-${c.chapter}`}>
+              <ChapterDiorama chapter={c.chapter} />
               <div className="mb-3 flex items-center gap-3">
                 <span className="text-4xl" aria-hidden>
                   {c.icon}
@@ -214,9 +229,10 @@ function ChapterSelect({
                       onClick={() => open && onPlay(s.id)}
                       disabled={!open}
                       data-testid={`stage-${s.id}`}
-                      className={`flex aspect-square min-h-14 flex-col items-center justify-center rounded-2xl text-xl font-black shadow ${
-                        open ? (best ? "bg-indigo-600 text-white" : "bg-indigo-100 text-indigo-900") : "bg-slate-200 text-slate-400"
+                      className={`flex aspect-square min-h-14 flex-col items-center justify-center rounded-2xl text-xl font-black ${
+                        open ? (best ? "blk3d bg-indigo-600 text-white" : "blk3d bg-indigo-100 text-indigo-900") : "bg-slate-200 text-slate-400"
                       }`}
+                      style={{ ["--blk-edge" as string]: best ? "#3730a3" : "#a5b4fc" }}
                       aria-label={`${s.id} 단계${open ? "" : " (잠김)"}${best ? `, 별 ${best.stars}개` : ""}`}
                     >
                       {open ? s.stage : "🔒"}
@@ -351,7 +367,7 @@ function StageScreen({
 
   const header = (
     <div className="flex items-center gap-2 px-3 pt-2">
-      <button onClick={onBack} className="h-12 rounded-xl bg-white px-3 text-lg font-bold shadow" aria-label="챕터 고르기로">
+      <button onClick={onBack} className="chip3d h-12 rounded-xl px-3 text-lg font-bold" aria-label="챕터 고르기로">
         ←
       </button>
       <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3">
@@ -359,7 +375,7 @@ function StageScreen({
         <span className="text-base text-slate-600">
           {stage.concept} · {theme.name}
         </span>
-        <span className="rounded-lg bg-white px-2 py-0.5 text-base font-bold shadow-sm" data-testid="target">
+        <span className="chip3d rounded-lg px-2 py-0.5 text-base font-bold" data-testid="target">
           {layout.targetVerified ? "최적" : "목표"} {layout.target}블록
         </span>
         {best ? <span className="text-base text-amber-600">{"★".repeat(best.stars)}</span> : null}
@@ -372,7 +388,7 @@ function StageScreen({
             useEditor.getState().reset([]);
             setMapKey((k) => k + 1);
           }}
-          className="h-12 rounded-xl bg-white px-3 text-base font-bold shadow"
+          className="chip3d h-12 rounded-xl px-3 text-base font-bold"
         >
           🔀 다른 맵
         </button>

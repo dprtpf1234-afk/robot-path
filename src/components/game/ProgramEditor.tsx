@@ -42,7 +42,7 @@ export function ProgramEditor({
     <DndContext sensors={sensors} onDragStart={() => setDragging(true)} onDragCancel={() => setDragging(false)} onDragEnd={onDragEnd}>
       <div
         data-testid="program"
-        className={`relative min-h-[72px] rounded-2xl border-4 p-2 ${selected === null && !locked ? "border-amber-400" : "border-slate-300"} bg-white ${
+        className={`panel3d relative min-h-[72px] rounded-2xl border-4 p-2 ${selected === null && !locked ? "border-amber-400" : "border-transparent"} ${
           layout === "row" ? "overflow-x-auto overflow-y-hidden" : "overflow-y-auto"
         } h-full`}
         onClick={(e) => {
@@ -136,8 +136,8 @@ function BlockView({ block, ctx }: { block: EBlock; ctx: RenderCtx }) {
 
   const header = (
     <div
-      className={`flex min-h-14 items-center gap-1.5 rounded-xl px-2 text-white shadow ${ring} transition-transform`}
-      style={{ background: meta.bg, borderBottom: `4px solid ${meta.border}` }}
+      className={`blk3d flex min-h-14 items-center gap-1.5 rounded-xl px-2 text-white ${ring}`}
+      style={{ background: meta.bg, ["--blk-edge" as string]: meta.border }}
       {...listeners}
       {...attributes}
       role="button"
