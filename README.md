@@ -53,7 +53,7 @@ npm run sim -- 24 all
      ```sql
      insert into public.teachers (user_id, display_name) values ('<교사 user id>', '김선생');
      ```
-3. **Vercel**에 GitHub 저장소 연결, 환경 변수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ENTRY_KEY_PEPPER`(`openssl rand -hex 32`). `.env.example` 참고.
+3. **Vercel**에 GitHub 저장소 연결. 함수 지역은 Supabase와 같은 서울(`icn1`)로 둔다(`vercel.json`). 지역이 다르면 DB를 여러 번 오가는 대회 API가 크게 느려진다(미국 동부↔서울에서 p95 8초 → 같은 지역에서 수십 ms). 환경 변수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ENTRY_KEY_PEPPER`(`openssl rand -hex 32`). `.env.example` 참고.
 4. GitHub에서 main을 보호 브랜치로 두고 CI(`.github/workflows/ci.yml`)를 필수 체크로 설정.
 
 ### 실제 Supabase에서 한 번 확인할 것 (PRD 14절 0단계)
