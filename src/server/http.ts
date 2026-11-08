@@ -1,6 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { TError } from "@/tournament/machine";
+import { CONFIG_PROBLEM } from "./config";
 
 export class HttpError extends Error {
   constructor(
@@ -30,6 +31,7 @@ export async function readJsonBody<T = Record<string, unknown>>(req: Request, ma
 
 export function handle(fn: (req: Request, ctx: { params: Promise<Record<string, string | string[]>> }) => Promise<Response>) {
   return async (req: Request, ctx: { params: Promise<Record<string, string | string[]>> }) => {
+    if (CONFIG_PROBLEM) return fail(503, "not_configured", CONFIG_PROBLEM);
     try {
       return await fn(req, ctx);
     } catch (e) {

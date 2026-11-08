@@ -17,6 +17,8 @@ npm run dev
 http://localhost:3000 — Supabase 환경 변수가 없으면 **메모리 백엔드**로 모든 기능(랭킹·대회·관전·관객 화면)이 동작한다.
 교사 로그인: `teacher@example.com` / `teacher1234` (메모리 모드 전용, `DEV_TEACHERS`로 바꿀 수 있음). 서버를 다시 시작하면 데이터가 사라진다.
 
+메모리 백엔드는 **배포(Vercel)에서는 막혀 있다**: Supabase 변수 없이 배포하면 개인 모드는 그대로 되지만 랭킹·대회 API는 503 「서버 설정이 필요해요」를 돌려준다(데이터 유실·개발용 교사 계정 노출 방지). 로컬에서 `next start`로 메모리 백엔드를 쓰려면 `ALLOW_MEMORY_BACKEND=1`을 붙인다.
+
 ## 테스트
 
 ```bash

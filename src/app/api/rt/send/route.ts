@@ -1,5 +1,5 @@
 import { requireCaller } from "@/server/auth";
-import { BACKEND } from "@/server/config";
+import { BACKEND, CONFIG_PROBLEM } from "@/server/config";
 import { fail, handle, ok, readJsonBody } from "@/server/http";
 import { publish } from "@/server/realtime";
 import { canSend } from "@/server/rtAuth";
@@ -7,6 +7,7 @@ import { canSend } from "@/server/rtAuth";
 /** 메모리 모드 전용: 선수가 자기 watch 채널에 보내기 (Supabase 모드는 채널에 직접 보냄, RLS가 확인) */
 export const POST = handle(async (req) => {
   if (BACKEND !== "memory") return fail(404, "not_found", "없음");
+  if (CONFIG_PROBLEM) return fail(503, "not_configured", CONFIG_PROBLEM);
   const c = await requireCaller(req);
   const b = await readJsonBody<{ topic?: string; event?: string; payload?: Record<string, unknown> }>(req);
   const topic = String(b.topic ?? "");

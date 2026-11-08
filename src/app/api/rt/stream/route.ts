@@ -1,5 +1,5 @@
 import { getCaller } from "@/server/auth";
-import { BACKEND } from "@/server/config";
+import { BACKEND, CONFIG_PROBLEM } from "@/server/config";
 import { bus, presence, presenceList, RtMessage } from "@/server/realtime";
 import { canReceive } from "@/server/rtAuth";
 
@@ -12,6 +12,7 @@ export const runtime = "nodejs";
  */
 export async function GET(req: Request) {
   if (BACKEND !== "memory") return new Response("not found", { status: 404 });
+  if (CONFIG_PROBLEM) return new Response(CONFIG_PROBLEM, { status: 503 });
   const url = new URL(req.url);
   const topic = url.searchParams.get("topic") ?? "";
   const caller = await getCaller(req);

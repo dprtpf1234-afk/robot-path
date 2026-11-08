@@ -13,6 +13,8 @@ export default defineConfig({
   },
   webServer: {
     command: `npx next start -p ${PORT}`,
+    // 로컬 E2E는 메모리 백엔드로 돈다 (배포에서는 막혀 있음)
+    env: { ALLOW_MEMORY_BACKEND: "1" },
     port: PORT,
     reuseExistingServer: true,
     timeout: 120_000,
