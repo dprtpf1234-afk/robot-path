@@ -24,6 +24,7 @@ import {
   setEventCode,
   setSoundOn,
 } from "@/lib/local";
+import { DEMO } from "@/lib/demo";
 import { enqueueStat, startAutoFlush } from "@/lib/sync";
 import { GameBoard } from "../game/GameBoard";
 import { fromProgram, useEditor } from "../game/editorStore";
@@ -83,8 +84,8 @@ export function PlayApp() {
     const url = new URL(window.location.href);
     const ev = url.searchParams.get("event");
     if (ev && /^[A-Z]{5}$/.test(ev.toUpperCase())) setEventCode(ev.toUpperCase());
-    if (url.hash === "#register") setRegister(true);
-    return startAutoFlush();
+    if (url.hash === "#register" && !DEMO) setRegister(true);
+    return DEMO ? undefined : startAutoFlush();
   }, []);
 
   const update = useCallback((f: (p: Progress) => Progress) => {
@@ -173,9 +174,11 @@ function ChapterSelect({
   return (
     <div className="mx-auto flex h-full max-w-5xl flex-col overflow-y-auto p-4">
       <div className="mb-4 flex items-center gap-2">
-        <a href="/" className="flex h-12 items-center rounded-xl bg-white px-4 text-lg font-bold shadow">
-          ← 홈
-        </a>
+        {DEMO ? null : (
+          <a href="/" className="flex h-12 items-center rounded-xl bg-white px-4 text-lg font-bold shadow">
+            ← 홈
+          </a>
+        )}
         <h1 className="flex-1 text-center text-2xl font-black sm:text-3xl">챕터를 골라요</h1>
         <span className="rounded-xl bg-amber-100 px-3 py-2 text-lg font-black text-amber-800" aria-label={`모은 별 ${total}개`}>
           ★ {total}
@@ -227,9 +230,13 @@ function ChapterSelect({
         })}
       </div>
       <div className="mt-6 flex justify-center">
+        {DEMO ? (
+          <p className="text-center text-base text-slate-500">체험판: 기록은 이 브라우저에만 저장돼요. 랭킹·대회는 정식 사이트에서 열려요.</p>
+        ) : (
         <button onClick={onRegister} className="h-14 rounded-2xl bg-amber-400 px-6 text-xl font-black text-amber-950 shadow">
           🏆 랭킹에 등록하기
         </button>
+        )}
       </div>
     </div>
   );
@@ -509,9 +516,11 @@ function ChapterDone({
           모은 별 <b className="text-amber-500">★ {stars}</b> / 15
         </p>
         <div className="mt-6 grid gap-2">
-          <button onClick={onRegister} className="h-16 rounded-2xl bg-amber-400 text-2xl font-black text-amber-950 shadow">
-            🏆 랭킹에 등록하기
-          </button>
+          {DEMO ? null : (
+            <button onClick={onRegister} className="h-16 rounded-2xl bg-amber-400 text-2xl font-black text-amber-950 shadow">
+              🏆 랭킹에 등록하기
+            </button>
+          )}
           {chapter < 3 ? (
             <button onClick={onNextChapter} className="h-16 rounded-2xl bg-indigo-600 text-2xl font-black text-white shadow">
               다음 챕터 →

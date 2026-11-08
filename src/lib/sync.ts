@@ -1,5 +1,6 @@
 "use client";
 /* 대기열: 단계 통계·랭킹 등록 요청을 기기에 쌓았다가 연결되면 보낸다. 각 항목에는 보낸 플레이어 세션 id가 붙는다. */
+import { DEMO } from "./demo";
 import { randomHex, readJson, writeJson } from "./local";
 
 export interface StatItem {
@@ -52,6 +53,7 @@ export function pendingRanking(player_session: string) {
 let flushing = false;
 
 export async function flush(): Promise<void> {
+  if (DEMO) return; // 체험판: 서버가 없다
   if (flushing || (typeof navigator !== "undefined" && navigator.onLine === false)) return;
   flushing = true;
   try {
